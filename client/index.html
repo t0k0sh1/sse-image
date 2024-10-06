@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <img id="image" />
+
+    <script>
+      // Server-Sent Events (SSE) の接続を作成
+      const eventSource = new EventSource(
+        "http://localhost:8080/api/v1/images/updates"
+      );
+
+      // サーバーからのメッセージを受け取ったときの処理
+      eventSource.onmessage = function (event) {
+        const updatedImageUrl = event.data;
+
+        // imgタグのsrcを更新して画像を表示
+        const imgElement = document.getElementById("image");
+        imgElement.src = `http://localhost:8080${updatedImageUrl}`;
+      };
+
+      // エラーハンドリング
+      eventSource.onerror = function (event) {
+        console.error("SSE error:", event);
+      };
+    </script>
+  </body>
+</html>
